@@ -13,21 +13,25 @@
 	                   Type 
 	                </th>
 	                <th>
-	                   By 
+	                   Info 
 	                </th>
 	            </tr>
 	       </thead>
 
 	     <tbody>
 	           <tr *ngFor="let row of transactions"> 
-	                <td>{{row?.created_at | date:'medium'}}</td> 
-	                <td>{{row?.amount}}</td>
+	                <td>{{row.created_at | date:'medium'}}</td> 
+	                <td>{{row.amount}}</td>
 	                <td>
-	                <span *ngIf="row?.tranType == 1">Deposit</span> 
-	                <span *ngIf="row?.tranType == 2">Withdrawn</span> 
-	                <span *ngIf="row?.tranType == 3">Transferred</span> 
+	                <span *ngIf="row.tranType == 1">Deposited</span> 
+	                <span *ngIf="row.tranType == 2">Withdrawn</span> 
+	                <span *ngIf="row.tranType == 3">Transferred to</span> 
+	                <span *ngIf="row.tranType == 4">Deposited</span> 
 	                </td>
-	                <td>{{ row?.to_user_id > 0 ? row?.email : 'self' }}</td>
+	                <td>
+	                <span *ngIf="row.tranType < 3">self</span> 
+	                <span *ngIf="row.tranType > 2">{{ row.email }}</span> 
+	                </td>
 	           </tr>
 	    </tbody>
 	</table>   

@@ -4,12 +4,13 @@ class TransactionsController < ApplicationController
 
   	def index
   		@transactions = Transaction
-  		.joins("LEFT JOIN `users` ON transactions.to_user_id = users.id")
+  		.joins("LEFT JOIN `users` ON transactions.other_user_id = users.id")
   		.where(user: current_user)
-  		.select("transactions.*, users.email") + Transaction
-  		.joins("LEFT JOIN `users` ON transactions.user_id = users.id")
-  		.where(to_user_id: current_user.id)
-  		.select("transactions.*, users.email")
+  		.select("transactions.*, users.email") 
+  		#+ Transaction
+  		#.joins("LEFT JOIN `users` ON transactions.user_id = users.id")
+  		#.where(other_user_id: current_user.id)
+  		#.select("transactions.*, users.email")
   		
 
   		render json: @transactions
@@ -33,7 +34,7 @@ class TransactionsController < ApplicationController
 			  @transaction.amount = @transaction.amount * -1
 			  @user = User.find_by email: params[:to_user]
 			  if @user
-			  	@transaction.to_user_id = @user.id
+			  	@transaction.other_user_id = @user.id
 			  else
 			  	render json: { "error" => 'Invalid user' }, :status => :service_unavailable  and return
 			  end
@@ -42,6 +43,9 @@ class TransactionsController < ApplicationController
 			end
 			
 		  	if @transaction.save
+		  		if @params['tranType'] == 3
+		  			Transaction.create(user: @user, amount: @transaction.amount * -1, tranType: 4, other_user_id: current_user.id)
+		  		end
 		  		render json: @transaction
 		  	else
 				render json: { "error" => 'Invalid transaction' }, :status => :service_unavailable  and return
