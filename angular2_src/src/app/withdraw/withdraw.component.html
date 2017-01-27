@@ -1,0 +1,27 @@
+<div class="animated fadeIn">
+    <h1>Withdraw/Transfer money!</h1>
+    <div>
+        <p *ngIf="showMessage" class="alert {{ class_name }}">{{ message }}</p>
+    </div>
+    <div>
+        <p *ngIf="showAmount" class="alert alert-success">You have {{ totalAmount }}</p>
+    </div>
+    <div *ngIf="totalAmount > 0">
+    	 <div class="form-group">
+		    <label class="radio-inline"><input type="radio" [checked]="transaction.tranType == 2" (click)="transaction.tranType = 2" name="transaction.tranType" value="2">Withdraw</label>
+		    <label class="radio-inline"><input type="radio" [checked]="transaction.tranType == 3" (click)="transaction.tranType = 3" name="transaction.tranType" value="3">Transfer</label>
+		  </div>
+		  <h5>{{ transaction.tranType == 2 ? "Withdraw" : "Deposit" }} money</h5>
+		 <div class="form-group" *ngIf="transaction.tranType == 3">
+		    <label>To account:</label>
+		    <input type="email" [value]="transaction.to_user" (input)="transaction.to_user = $event.target.value" class="form-control">
+		 </div>
+    	 <div class="form-group">
+		    <label>Amount:</label>
+		    <input type="number" min="0" max="{{ totalAmount }}" [value]="transaction.amount" (input)="transaction.amount = $event.target.value" class="form-control">
+		 </div>
+		 <div class="form-group">
+		 	<button (click)="withdraw_transfer()" class="btn btn-primary">Submit</button>
+		 </div>
+    </div>
+</div>
