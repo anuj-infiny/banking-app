@@ -4,9 +4,11 @@ class TransactionsController < ApplicationController
 
   	def index
   		@transactions = Transaction
-  		.joins("LEFT JOIN `users` ON transactions.to_user_id = users.id")
   		.where(user: current_user)
+  		.joins("LEFT JOIN `users` ON transactions.to_user_id = users.id")
+  		.or(Transaction.where(to_user_id: current_user.id).joins("LEFT JOIN `users` ON transactions.to_user_id = users.id"))
   		.select("transactions.*, users.email")
+
 
   		render json: @transactions
   	end
