@@ -6,9 +6,8 @@ class TransactionsController < ApplicationController
   		@transactions = Transaction
   		.where(user: current_user)
   		.joins("LEFT JOIN `users` ON transactions.to_user_id = users.id")
-  		.or(Transaction.where(to_user_id: current_user.id).joins("LEFT JOIN `users` ON transactions.to_user_id = users.id"))
+  		.or(Transaction.where(to_user_id: current_user.id).joins("LEFT JOIN `users` ON transactions.user_id = users.id"))
   		.select("transactions.*, users.email")
-
 
   		render json: @transactions
   	end
